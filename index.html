@@ -1,1 +1,2471 @@
-﻿
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo 2: ¿Cómo entender una decisión de políticas públicas?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: #f5f5f5;
+            color: #263238;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide-header {
+            padding: 40px 70px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .slide-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #263238;
+        }
+        .slide-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 0 70px;
+        }
+        .slide-footer {
+            padding: 20px 70px;
+            font-size: 16px;
+            color: #78909c;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-button {
+            background-color: #90caf9;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #64b5f6;
+        }
+        .nav-button:disabled {
+            background-color: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        .slide-counter {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #455a64;
+            margin: 0 10px;
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+            margin: 0 10px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .indicator-dot.active {
+            background-color: #90caf9;
+        }
+        
+        /* Estilos específicos para cada tipo de contenido */
+        .left-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 20px 40px 0;
+        }
+        .right-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0 40px 20px;
+        }
+        .concept-container {
+            background-color: rgba(144, 202, 249, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .concept-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+        .concept-title i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 32px;
+        }
+        .concept-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .concept-item i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 24px;
+            margin-top: 2px;
+        }
+        .concept-text {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+        .highlight {
+            font-weight: 600;
+            color: #263238;
+        }
+        .visual-box {
+            background-color: #263238;
+            border-radius: 12px;
+            padding: 40px;
+            color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .visual-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #90caf9;
+        }
+        .visual-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .visual-item i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .visual-text {
+            font-size: 22px;
+            line-height: 1.3;
+        }
+        .visual-highlight {
+            color: #90caf9;
+            font-weight: 600;
+        }
+        .reference {
+            font-size: 16px;
+            color: #b0bec5;
+            margin-top: 30px;
+            text-align: right;
+        }
+        .quote {
+            font-style: italic;
+            color: #546e7a;
+        }
+        .comparison {
+            display: flex;
+            background-color: rgba(144, 202, 249, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .comparison-col {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .comparison-col:first-child {
+            background-color: rgba(144, 202, 249, 0.25);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .comparison-icon {
+            color: #90caf9;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        .comparison-label {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #263238;
+        }
+        .comparison-text {
+            font-size: 18px;
+            color: #455a64;
+        }
+        .matrix-container {
+            background-color: #263238;
+            border-radius: 12px;
+            padding: 30px;
+            color: white;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .matrix-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #90caf9;
+            display: flex;
+            align-items: center;
+        }
+        .matrix-title i {
+            margin-right: 15px;
+            font-size: 32px;
+        }
+        .matrix-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        .matrix-table th {
+            background-color: rgba(144, 202, 249, 0.2);
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .matrix-table th:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-top-left-radius: 8px;
+        }
+        .matrix-table th:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-top-right-radius: 8px;
+        }
+        .matrix-table td {
+            padding: 15px;
+            font-size: 18px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .matrix-table tr:last-child td:first-child {
+            border-bottom-left-radius: 8px;
+        }
+        .matrix-table tr:last-child td:last-child {
+            border-bottom-right-radius: 8px;
+        }
+        .matrix-table td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+        .matrix-table tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+        .matrix-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+        .strategy-highlight {
+            color: #90caf9;
+            font-weight: 600;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+        }
+        .bento-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .bento-item i {
+            color: #90caf9;
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .bento-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .index-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .index-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .index-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #90caf9;
+            margin-right: 20px;
+            min-width: 40px;
+        }
+        .index-text {
+            font-size: 24px;
+            color: #455a64;
+        }
+        .visual-content {
+            background-color: rgba(144, 202, 249, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .visual-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .visual-item i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        .visual-text {
+            font-size: 20px;
+            color: #455a64;
+        }
+        .feature-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+        }
+        .feature-box {
+            background-color: rgba(144, 202, 249, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .feature-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .feature-title i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 32px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .feature-item i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 24px;
+            margin-top: 2px;
+            min-width: 24px;
+        }
+        .feature-text {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+        .image-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .paradox-box {
+            background-color: rgba(144, 202, 249, 0.15);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            border-left: 5px solid #90caf9;
+        }
+        .paradox-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .paradox-title i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .paradox-text {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+        .metaphor-box {
+            background-color: rgba(144, 202, 249, 0.15);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #90caf9;
+        }
+        .metaphor-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .metaphor-title i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .metaphor-text {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+        .model-integration {
+            display: flex;
+            margin-top: 20px;
+            background-color: rgba(144, 202, 249, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .model-component {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .model-component:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .component-icon {
+            color: #90caf9;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        .component-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #263238;
+        }
+        .components-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: 30px 0;
+            gap: 20px;
+        }
+        .component-card {
+            background-color: rgba(144, 202, 249, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            align-items: flex-start;
+            flex-grow: 1;
+        }
+        .component-icon {
+            color: #90caf9;
+            font-size: 36px;
+            margin-right: 20px;
+            min-width: 36px;
+        }
+        .component-content {
+            flex-grow: 1;
+        }
+        .component-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .component-details {
+            display: flex;
+            gap: 15px;
+        }
+        .detail-item {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .detail-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .detail-title i {
+            color: #90caf9;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .detail-text {
+            font-size: 18px;
+            color: #546e7a;
+            line-height: 1.4;
+        }
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            flex-grow: 1;
+        }
+        .rule-card {
+            background-color: rgba(144, 202, 249, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.2s;
+        }
+        .rule-card:hover {
+            transform: translateY(-5px);
+        }
+        .rule-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .rule-icon {
+            color: #90caf9;
+            font-size: 36px;
+            margin-right: 15px;
+        }
+        .rule-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #263238;
+        }
+        .rule-content {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        .rule-example {
+            margin-top: 15px;
+            font-style: italic;
+            color: #546e7a;
+            font-size: 18px;
+        }
+        .matrix-intro {
+            margin-bottom: 20px;
+        }
+        .matrix-description {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+        .conclusions-container {
+            background-color: rgba(144, 202, 249, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: auto;
+        }
+        .conclusions-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .conclusions-title i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 32px;
+        }
+        .conclusions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .conclusion-item {
+            display: flex;
+            align-items: flex-start;
+        }
+        .conclusion-item i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 24px;
+            margin-top: 2px;
+            min-width: 24px;
+        }
+        .conclusion-text {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+        .footer-text {
+            font-size: 16px;
+            color: #78909c;
+            margin-top: 20px;
+            text-align: right;
+            font-style: italic;
+        }
+        .public-policy-box {
+            background-color: rgba(144, 202, 249, 0.15);
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 5px solid #90caf9;
+        }
+        .public-policy-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .public-policy-title i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        .public-policy-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .public-policy-item i {
+            color: #90caf9;
+            margin-right: 15px;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+        .public-policy-text {
+            font-size: 20px;
+            color: #455a64;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-header">
+                <h1 class="slide-title">Capítulo 2: ¿Cómo entender una decisión de políticas públicas?</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div style="font-size: 60px; font-weight: 700; color: #263238; margin-bottom: 40px;">
+                        ¿Cómo entender una decisión de políticas públicas?
+                    </div>
+                    <div style="font-size: 20px; color: #e0e0e0; margin-bottom: 40px;">
+                        Un análisis sobre la naturaleza, características y modelos de decisión en el ámbito de las políticas públicas contemporáneas
+                    </div>
+                    <div style="font-size: 20px; color: #90caf9; margin-top: 40px;">
+                        Presentado por: Dr. CNU
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="bento-grid">
+                        <div class="bento-item">
+                            <i class="material-icons">lightbulb</i>
+                            <span class="bento-text">Voluntad + Alternativas</span>
+                        </div>
+                        <div class="bento-item">
+                            <i class="material-icons">swap_horiz</i>
+                            <span class="bento-text">Medios vs. Fines</span>
+                        </div>
+                        <div class="bento-item">
+                            <i class="material-icons">hub</i>
+                            <span class="bento-text">Complejidad Decisional</span>
+                        </div>
+                        <div class="bento-item">
+                            <i class="material-icons">account_balance</i>
+                            <span class="bento-text">Problema Colectivo</span>
+                        </div>
+                        <div class="bento-item">
+                            <i class="material-icons">psychology</i>
+                            <span class="bento-text">Racionalidad Limitada</span>
+                        </div>
+                        <div class="bento-item">
+                            <i class="material-icons">timeline</i>
+                            <span class="bento-text">Modelo Integrador</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <h1 class="slide-title">Índice del Capítulo</h1>
+            </div>
+            <div class="slide-content">
+                <div class="index-container">
+                    <div class="index-item">
+                        <div class="index-number">2.1</div>
+                        <div class="index-text">Qué es una decisión de policy</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-number">2.2</div>
+                        <div class="index-text">Las características de las políticas públicas contemporáneas</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-number">2.3</div>
+                        <div class="index-text">La necesidad de un modelo para estudiar decisiones</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-number">2.4</div>
+                        <div class="index-text">Un modelo realista del proceso de toma de decisiones</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-number"></div>
+                        <div class="index-text">Matrices y cuadros de apoyo</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-number"></div>
+                        <div class="index-text">Conclusiones</div>
+                    </div>
+                </div>
+                <div class="visual-content">
+                    <div class="visual-title">
+                        <i class="material-icons">lightbulb</i>
+                        <span>Ideas Clave del Capítulo</span>
+                    </div>
+                    <div class="visual-item">
+                        <i class="material-icons">swap_horiz</i>
+                        <div class="visual-text"><span class="highlight">Voluntad + Alternativas + Proceso</span> = Decisión de Policy</div>
+                    </div>
+                    <div class="visual-item">
+                        <i class="material-icons">hub</i>
+                        <div class="visual-text">Complejidad, Incertidumbre y Conflicto</div>
+                    </div>
+                    <div class="visual-item">
+                        <i class="material-icons">psychology</i>
+                        <div class="visual-text">Modelos: Racional, Limitada, Incremental, Cubo de Basura</div>
+                    </div>
+                    <div class="visual-item">
+                        <i class="material-icons">timeline</i>
+                        <div class="visual-text">Modelo Integrador: <span class="highlight">Aprender implementando</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 3: Definición de decisión de policy -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <h1 class="slide-title">2.1. ¿Qué es una decisión de policy?</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">lightbulb</i>
+                            <span>Definición y Componentes</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">check_circle</i>
+                            <div class="concept-text"><span class="highlight">Elección con voluntad</span> entre alternativas que busca transformar la realidad</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">check_circle</i>
+                            <div class="concept-text"><span class="highlight">Proceso</span> que conecta elecciones parciales, descartes y ajustes sucesivos</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">check_circle</i>
+                            <div class="concept-text">Puede consistir en <span class="quote">"decidir no decidir"</span> para mantener el statu quo</div>
+                        </div>
+                    </div>
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">swap_horiz</i>
+                            <span>Dimensiones de la Decisión</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">trending_up</i>
+                            <div class="concept-text">Decisión sobre <span class="highlight">medios</span> (cómo alcanzar un fin)</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">flag</i>
+                            <div class="concept-text">Decisión sobre <span class="highlight">fines</span> (qué objetivos persigo)</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">people</i>
+                            <div class="concept-text">Decisión sustantiva: priorizar <span class="highlight">valores y fines</span>, no solo instrumentos</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">Elementos Esenciales</div>
+                        <div class="visual-item">
+                            <i class="material-icons">psychology</i>
+                            <div class="visual-text"><span class="visual-highlight">Voluntad</span> + <span class="visual-highlight">Alternativas</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">timeline</i>
+                            <div class="visual-text"><span class="visual-highlight">Proceso</span> + <span class="visual-highlight">Potencial de cambio</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">account_balance</i>
+                            <div class="visual-text">Política pública: resolver <span class="visual-highlight">problema colectivo</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">public</i>
+                            <div class="visual-text">Lo <span class="visual-highlight">público</span> por el problema, no por el actor</div>
+                        </div>
+                        <div class="reference">Fuente: Bobbio (1996); Dunn (1981)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 4: Decisión sobre medios vs. fines y política pública -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <h1 class="slide-title">2.1. Medios vs. Fines y Definición de Política Pública</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="comparison">
+                        <div class="comparison-col">
+                            <i class="material-icons comparison-icon">trending_up</i>
+                            <div class="comparison-label">Medios</div>
+                            <div class="comparison-text">Cómo alcanzar un fin</div>
+                        </div>
+                        <div class="comparison-col">
+                            <i class="material-icons comparison-icon">flag</i>
+                            <div class="comparison-label">Fines</div>
+                            <div class="comparison-text">Qué objetivos persigo</div>
+                        </div>
+                    </div>
+                    
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">priority_high</i>
+                            <span>Decisión Sustantiva</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">stars</i>
+                            <div class="concept-text">Priorizar <span class="highlight">valores y fines</span>, no solo escoger instrumentos</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">people</i>
+                            <div class="concept-text">En el espacio público: <span class="highlight">agregar preferencias</span> individuales en decisiones colectivas</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">gavel</i>
+                            <div class="concept-text">Necesidad de <span class="highlight">reglas de agregación</span> y procedimientos</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="public-policy-box">
+                        <div class="public-policy-title">
+                            <i class="material-icons">account_balance</i>
+                            <span>Definición de Política Pública</span>
+                        </div>
+                        <div class="public-policy-item">
+                            <i class="material-icons">lightbulb</i>
+                            <div class="public-policy-text"><span class="highlight">Conjunto de decisiones y acciones</span> orientadas a resolver un problema colectivo</div>
+                        </div>
+                        <div class="public-policy-item">
+                            <i class="material-icons">public</i>
+                            <div class="public-policy-text">Lo <span class="highlight">público</span> deriva del <span class="highlight">carácter colectivo del problema</span>, no de quién actúa</div>
+                        </div>
+                        <div class="public-policy-item">
+                            <i class="material-icons">groups</i>
+                            <div class="public-policy-text">Incorpora <span class="highlight">actores privados y sociales</span> junto a los gubernamentales</div>
+                        </div>
+                        <div class="public-policy-item">
+                            <i class="material-icons">cases</i>
+                            <div class="public-policy-text">Ejemplo: <span class="highlight">Grameen Bank</span> nace fuera del Estado pero responde a un problema colectivo</div>
+                        </div>
+                        <div class="reference">Fuente: Dunn (1981); Subirats et al. (2007)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 5: Modelo del Estado liberal -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <h1 class="slide-title">2.2. Modelo del Estado liberal</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">account_balance</i>
+                            <span>Características Fundamentales</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">security</i>
+                            <div class="concept-text"><span class="highlight">Garantizar orden</span> y <span class="highlight">libertades</span> tras revoluciones americana y francesa</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">gavel</i>
+                            <div class="concept-text">Instrumentos <span class="highlight">regulativos</span>: reglas generales, permisos y prohibiciones</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">balance</i>
+                            <div class="concept-text">Administración <span class="highlight">subordinada a la ley</span> y <span class="highlight">imparcialidad procedimental</span></div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">policy</i>
+                            <div class="concept-text">Estado de derecho: <span class="quote">"incumplir el procedimiento"</span> pesa más que retrasar una obra</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">Estado Liberal</div>
+                        <div class="visual-item">
+                            <i class="material-icons">library_books</i>
+                            <div class="visual-text"><span class="visual-highlight">Regulación</span> como instrumento principal</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">verified_user</i>
+                            <div class="visual-text"><span class="visual-highlight">Legalidad</span> como fuente de legitimidad</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">fact_check</i>
+                            <div class="visual-text">Acción pública como <span class="visual-highlight">aplicación imparcial de normas</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">history_edu</i>
+                            <div class="visual-text">Burocracia <span class="visual-highlight">legal-racional</span> (Weber)</div>
+                        </div>
+                        <div class="reference">Fuente: Weber; Dente (2004)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 6: Welfare state -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <h1 class="slide-title">2.2. Welfare state</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="comparison">
+                        <div class="comparison-col">
+                            <i class="material-icons comparison-icon">rule</i>
+                            <div class="comparison-label">Programas Condicionales</div>
+                            <div class="comparison-text">"Si se cumple A, entonces permiso B"</div>
+                        </div>
+                        <div class="comparison-col">
+                            <i class="material-icons comparison-icon">track_changes</i>
+                            <div class="comparison-label">Programas con Objetivos</div>
+                            <div class="comparison-text">Definir metas, asignar recursos y programar</div>
+                        </div>
+                    </div>
+                    
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">trending_up</i>
+                            <span>Características Clave</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">security</i>
+                            <div class="concept-text"><span class="highlight">Garantizar crecimiento, empleo</span> y <span class="highlight">protección social</span> (crisis del 29, posguerra)</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">health_and_safety</i>
+                            <div class="concept-text">Reducir incertidumbre: <span class="highlight">pensiones, educación, salud</span></div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">account_tree</i>
+                            <div class="concept-text"><span class="highlight">Expansión burocrática</span> y <span class="highlight">descentralización</span> de niveles de gobierno</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">psychology</i>
+                            <div class="concept-text"><span class="highlight">Discrecionalidad técnica</span> a administraciones con capacidad de implementación</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">Welfare State</div>
+                        <div class="visual-item">
+                            <i class="material-icons">track_changes</i>
+                            <div class="visual-text"><span class="visual-highlight">Objetivos</span> como eje central</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">tune</i>
+                            <div class="visual-text"><span class="visual-highlight">Programación</span> de la acción pública</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">speed</i>
+                            <div class="visual-text"><span class="visual-highlight">Eficacia</span> como criterio de legitimidad</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">assessment</i>
+                            <div class="visual-text"><span class="visual-highlight">Evaluación</span> de resultados</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">diversity_3</i>
+                            <div class="visual-text">Diversificación de <span class="visual-highlight">instrumentos</span>: transferencias, incentivos, provisión directa</div>
+                        </div>
+                        <div class="reference">Fuente: Dente (2004)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 7: Tres rasgos de la contemporaneidad (1) -->
+        <div class="slide" id="slide-7">
+            <div class="slide-header">
+                <h1 class="slide-title">2.2. Tres rasgos de la contemporaneidad (1)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="feature-container">
+                    <div class="feature-box">
+                        <div class="feature-title">
+                            <i class="material-icons">hub</i>
+                            <span>Explosión de la complejidad decisional</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">device_hub</i>
+                            <div class="feature-text"><span class="highlight">Redes densas</span> en eje horizontal (público-privado) y vertical (local-nacional-supranacional)</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">layers</i>
+                            <div class="feature-text"><span class="highlight">Gobierno multinivel</span>: UE-Estado-región-municipio-proximidad</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">blur_on</i>
+                            <div class="feature-text"><span class="highlight">Difusión de responsabilidades</span> y dificultad para identificar autores</div>
+                        </div>
+                        <div class="image-container">
+                            <img src="https://sfile.chatglm.cn/images-ppt/86f76e12d3e9.jpeg" alt="Red compleja de actores" style="max-height: 180px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-container">
+                    <div class="visual-box">
+                        <div class="visual-title">
+                            <i class="material-icons">help_outline</i>
+                            <span>Aumento de la incertidumbre</span>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">crisis_alert</i>
+                            <div class="visual-text"><span class="visual-highlight">Shocks exógenos</span>: crisis financieras, disrupciones tecnológicas</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">psychology_alt</i>
+                            <div class="visual-text"><span class="visual-highlight">Diagnóstico > terapia</span>: la ciencia mejora el diagnóstico más que las soluciones</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">science</i>
+                            <div class="visual-text">Avance mediante <span class="visual-highlight">ensayo y error</span> (*puzzling*)</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">warning</i>
+                            <div class="visual-text"><span class="visual-highlight">Externalidades</span> y efectos no intencionados</div>
+                        </div>
+                        <div class="reference">Fuente: Subirats (2007); Esteve (2009)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 8: Tres rasgos de la contemporaneidad (2) y Figura 2.1 -->
+        <div class="slide" id="slide-8">
+            <div class="slide-header">
+                <h1 class="slide-title">2.2. Tres rasgos de la contemporaneidad (2) y Figura 2.1</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="feature-box">
+                        <div class="feature-title">
+                            <i class="material-icons">people_alt</i>
+                            <span>Crecimiento de los conflictos sociales</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">mood_bad</i>
+                            <div class="feature-text"><span class="highlight">Desconfianza</span> hacia representantes electos</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">psychology</i>
+                            <div class="feature-text">Auge de <span class="highlight">valores posmaterialistas</span> (Inglehart, 1977)</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">diversity_3</i>
+                            <div class="feature-text"><span class="highlight">Nuevas identidades</span>: religión, etnia, territorio, estilos de vida</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">gavel</i>
+                            <div class="feature-text"><span class="highlight">Judicialización</span> y protagonismo de tribunales</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">not_interested</i>
+                            <div class="feature-text"><span class="highlight">NIMBY</span>: rechazo a infraestructuras "en mi patio trasero"</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="matrix-container">
+                        <div class="matrix-title">
+                            <i class="material-icons">grid_view</i>
+                            <span>Figura 2.1: Problemas y estrategias</span>
+                        </div>
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Consenso sobre objetivos</th>
+                                    <th colspan="2">Conocimiento de soluciones</th>
+                                </tr>
+                                <tr>
+                                    <th>Conocida</th>
+                                    <th>No conocida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Compartido</td>
+                                    <td><span class="strategy-highlight">Estrategias técnicas/racionales</span><br>Programación, optimización</td>
+                                    <td><span class="strategy-highlight">Experimentación</span><br>Pruebas, aprendizaje</td>
+                                </tr>
+                                <tr>
+                                    <td>No compartido</td>
+                                    <td><span class="strategy-highlight">Negociación</span><br>Acuerdos, consensos</td>
+                                    <td><span class="strategy-highlight">Estrategias "inspirativas"</span><br>Brainstorming, liderazgo simbólico</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="reference">Fuente: Christensen (1985); Balducci (1991); Subirats (2007)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 9: Introducción a los modelos decisionales -->
+        <div class="slide" id="slide-9">
+            <div class="slide-header">
+                <h1 class="slide-title">2.3. La necesidad de un modelo para estudiar decisiones</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="metaphor-box">
+                        <div class="metaphor-title">
+                            <i class="material-icons">sports</i>
+                            <span>La metáfora del "croquet"</span>
+                        </div>
+                        <div class="metaphor-text">
+                            <span class="quote">"Cuando juego al 'croquet' de las políticas, las bolas son <span class="highlight">puercoespines</span>, los palos <span class="highlight">flamencos</span> y las puertas <span class="highlight">soldados</span> que se mueven"</span>
+                        </div>
+                        <div class="metaphor-text" style="margin-top: 10px; font-style: italic; text-align: right; color: #78909c;">
+                            — Deutsch (1963)
+                        </div>
+                    </div>
+                    
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">visibility</i>
+                            <span>Modelos como "lentes conceptuales"</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">search</i>
+                            <div class="concept-text">Para <span class="highlight">ordenar</span> sin simplificar en exceso la complejidad decisional</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">category</i>
+                            <div class="concept-text">La teoría guía <span class="highlight">preguntas, categorías y relaciones</span></div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">psychology</i>
+                            <div class="concept-text">Evita errores de <span class="highlight">sentido común</span> en el análisis de políticas</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">¿Por qué necesitamos modelos?</div>
+                        <div class="visual-item">
+                            <i class="material-icons">filter_center_focus</i>
+                            <div class="visual-text"><span class="visual-highlight">Enfocar</span> la atención en elementos relevantes</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">schema</i>
+                            <div class="visual-text"><span class="visual-highlight">Estructurar</span> el análisis de decisiones complejas</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">compare</i>
+                            <div class="visual-text"><span class="visual-highlight">Comparar</span> diferentes enfoques decisionales</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">insights</i>
+                            <div class="visual-text"><span class="visual-highlight">Comprender</span> la lógica subyacente a las decisiones</div>
+                        </div>
+                        <div class="reference">Fuente: Allison (1971)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 10: El modelo racional -->
+        <div class="slide" id="slide-10">
+            <div class="slide-header">
+                <h1 class="slide-title">2.3. El modelo racional</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">psychology</i>
+                            <span>Supuestos del modelo</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">sort</i>
+                            <div class="concept-text">Decisor <span class="highlight">ordena valores y objetivos</span> de manera clara</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">list_alt</i>
+                            <div class="concept-text"><span class="highlight">Identifica todas las alternativas</span> posibles</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">analytics</i>
+                            <div class="concept-text"><span class="highlight">Evalúa consecuencias y costos</span> de cada opción</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">emoji_events</i>
+                            <div class="concept-text"><span class="highlight">Elige la opción óptima</span> que maximiza beneficios</div>
+                        </div>
+                    </div>
+                    
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">insights</i>
+                            <span>Características y limitaciones</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">menu_book</i>
+                            <div class="concept-text">Modelo <span class="highlight">normativo</span> que inspira manuales de gestión</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">info</i>
+                            <div class="concept-text">Exige <span class="highlight">información completa</span> y capacidades ilimitadas</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">thumb_down</i>
+                            <div class="concept-text"><span class="highlight">Baja verosimilitud empírica</span> en contextos reales</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">Modelo Racional</div>
+                        <div class="visual-item">
+                            <i class="material-icons">lightbulb</i>
+                            <div class="visual-text"><span class="visual-highlight">Horizonte normativo</span> de la decisión</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">architecture</i>
+                            <div class="visual-text">Proporciona <span class="visual-highlight">claridad conceptual</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">compare_arrows</i>
+                            <div class="visual-text">Sirve como <span class="visual-highlight">marco de comparación</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">warning</i>
+                            <div class="visual-text">Irrealista en contextos con <span class="visual-highlight">objetivos disputados</span></div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">help_outline</i>
+                            <div class="visual-text">Inaplicable cuando hay <span class="visual-highlight">soluciones inciertas</span></div>
+                        </div>
+                        <div class="reference">Fuente: Bobbio (1996)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 11: El modelo de racionalidad limitada -->
+        <div class="slide" id="slide-11">
+            <div class="slide-header">
+                <h1 class="slide-title">2.3. El modelo de racionalidad limitada</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">psychology</i>
+                            <span>Limitaciones cognitivas (Simon, 1957)</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">timer</i>
+                            <div class="concept-text"><span class="highlight">Costos de búsqueda</span>: información y tiempo limitados</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">thumb_up_alt</i>
+                            <div class="concept-text"><span class="highlight">Satisfacer</span> en vez de optimizar</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">lightbulb</i>
+                            <div class="concept-text">Uso de <span class="highlight">heurísticas</span>: atajos mentales</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">repeat</i>
+                            <div class="concept-text">Establecimiento de <span class="highlight">rutinas</span> en las organizaciones</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">done_all</i>
+                            <div class="concept-text"><span class="quote">"Buena suficiente"</span> como meta aceptable</div>
+                        </div>
+                    </div>
+                    
+                    <div class="paradox-box">
+                        <div class="paradox-title">
+                            <i class="material-icons">swap_horiz</i>
+                            <span>Paradoja de Condorcet</span>
+                        </div>
+                        <div class="paradox-text">
+                            Preferencias individuales <span class="highlight">racionales</span> pueden producir <span class="highlight">ciclos colectivos</span> (A>B, B>C, C>A)
+                        </div>
+                        <div class="paradox-text" style="margin-top: 10px; font-style: italic; text-align: right; color: #78909c;">
+                            — Condorcet; MacKenzie (1982)
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">Racionalidad Limitada</div>
+                        <div class="visual-item">
+                            <i class="material-icons">psychology_alt</i>
+                            <div class="visual-text"><span class="visual-highlight">Capacidades cognitivas</span> restringidas</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">schedule</i>
+                            <div class="visual-text"><span class="visual-highlight">Presión temporal</span> en decisiones</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">info</i>
+                            <div class="visual-text"><span class="visual-highlight">Información imperfecta</span> e incompleta</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">settings</i>
+                            <div class="visual-text"><span class="visual-highlight">Procedimientos</span> estabilizan resultados</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">groups</i>
+                            <div class="visual-text">Dificultad para <span class="visual-highlight">agregar preferencias</span></div>
+                        </div>
+                        <div class="reference">Fuente: Simon (1957); MacKenzie (1982)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 12: El modelo incremental y el "cubo de basura" -->
+        <div class="slide" id="slide-12">
+            <div class="slide-header">
+                <h1 class="slide-title">2.3. El modelo incremental y el "cubo de basura"</h1>
+            </div>
+            <div class="slide-content">
+                <div class="feature-container">
+                    <div class="feature-box">
+                        <div class="feature-title">
+                            <i class="material-icons">trending_up</i>
+                            <span>Modelo incremental (Lindblom, 1959)</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">add</i>
+                            <div class="feature-text">Decisión <span class="highlight">"a pequeños pasos"</span></div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">tune</i>
+                            <div class="feature-text"><span class="highlight">Ajuste</span> de políticas heredadas</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">compare_arrows</i>
+                            <div class="feature-text">Comparación de alternativas <span class="highlight">marginales</span></div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">savings</i>
+                            <div class="feature-text"><span class="highlight">Reducción</span> de costos de información y riesgo político</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">groups</i>
+                            <div class="feature-text">Cuadra con <span class="highlight">coaliciones</span> que acuerdan cambios limitados</div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="material-icons">warning</i>
+                            <div class="feature-text">Riesgo: <span class="highlight">bloquear innovaciones</span> y mantener ineficiencias</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-container">
+                    <div class="visual-box">
+                        <div class="visual-title">
+                            <i class="material-icons">delete</i>
+                            <span>Modelo "cubo de basura"</span>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">shuffle</i>
+                            <div class="visual-text"><span class="visual-highlight">Organizaciones anárquicas</span> (Cohen, March y Olsen, 1972)</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">waves</i>
+                            <div class="visual-text"><span class="visual-highlight">Flujos independientes</span>: problemas, soluciones, participantes, oportunidades</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">merge_type</i>
+                            <div class="visual-text"><span class="visual-highlight">Kingdon</span>: alineación de flujos de problemas, políticas e imperativos políticos</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">door_front</i>
+                            <div class="visual-text"><span class="visual-highlight">Ventana de oportunidad</span> cuando se alinean los flujos</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">person</i>
+                            <div class="visual-text"><span class="visual-highlight">Emprendedor</span> que conecta problema y solución</div>
+                        </div>
+                        <div class="reference">Fuente: Lindblom (1959); Cohen, March y Olsen (1972); Kingdon (1995)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 13: Introducción al modelo realista -->
+        <div class="slide" id="slide-13">
+            <div class="slide-header">
+                <h1 class="slide-title">2.4. Un modelo realista del proceso de toma de decisiones</h1>
+            </div>
+            <div class="slide-content">
+                <div class="left-content">
+                    <div class="concept-container">
+                        <div class="concept-title">
+                            <i class="material-icons">integration_instructions</i>
+                            <span>Modelo integrador</span>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">auto_fix_high</i>
+                            <div class="concept-text">Describe de manera <span class="highlight">realista</span> cómo se decide en políticas públicas</div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">delete</i>
+                            <div class="concept-text">Apoyo en el <span class="highlight">cubo de basura</span> y la <span class="highlight">ventana de oportunidad</span></div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">psychology</i>
+                            <div class="concept-text">Incorpora <span class="highlight">racionalidad limitada</span>, <span class="highlight">pasos incrementales</span> y <span class="highlight">momentos técnicos</span></div>
+                        </div>
+                        <div class="concept-item">
+                            <i class="material-icons">tune</i>
+                            <div class="concept-text">Adaptación a contextos de <span class="highlight">menor conflicto e incertidumbre</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="model-integration">
+                        <div class="model-component">
+                            <i class="material-icons component-icon">psychology</i>
+                            <div class="component-label">Racionalidad Limitada</div>
+                        </div>
+                        <div class="model-component">
+                            <i class="material-icons component-icon">trending_up</i>
+                            <div class="component-label">Pasos Incrementales</div>
+                        </div>
+                        <div class="model-component">
+                            <i class="material-icons component-icon">delete</i>
+                            <div class="component-label">Cubo de Basura</div>
+                        </div>
+                        <div class="model-component">
+                            <i class="material-icons component-icon">door_front</i>
+                            <div class="component-label">Ventana de Oportunidad</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="visual-box">
+                        <div class="visual-title">Modelo Realista Integrador</div>
+                        <div class="visual-item">
+                            <i class="material-icons">settings</i>
+                            <div class="visual-text"><span class="visual-highlight">Flexibilidad</span> para adaptarse a contextos volátiles</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">hub</i>
+                            <div class="visual-text"><span class="visual-highlight">Aprendizaje</span> durante la implementación</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">merge_type</i>
+                            <div class="visual-text"><span class="visual-highlight">Acoplamiento</span> de problemas y soluciones</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">people</i>
+                            <div class="visual-text"><span class="visual-highlight">Emprendedor</span> que aprovecha la oportunidad</div>
+                        </div>
+                        <div class="visual-item">
+                            <i class="material-icons">balance</i>
+                            <div class="visual-text">Combina <span class="visual-highlight">técnicas</span> y <span class="visual-highlight">políticas</span> según el contexto</div>
+                        </div>
+                        <div class="reference">Fuente: Kingdon (1995); Christensen (1985); Subirats (2007)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 14: Componentes del modelo (1) -->
+        <div class="slide" id="slide-14">
+            <div class="slide-header">
+                <h1 class="slide-title">2.4. Componentes del modelo (1)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="components-container">
+                    <div class="component-card">
+                        <i class="material-icons component-icon">psychology</i>
+                        <div class="component-content">
+                            <div class="component-title">Interpretación del problema</div>
+                            <div class="component-details">
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">edit</i>
+                                        <span>Definición</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Actores <span class="highlight">definen</span> y <span class="highlight">redefinen</span> qué está en juego
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">public</i>
+                                        <span>Naturaleza colectiva</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Surge de la <span class="highlight">interpretación</span> de los actores
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">crop_free</i>
+                                        <span>Encuadre</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        El encuadre que logra más <span class="highlight">adiciones</span> define el problema
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component-card">
+                        <i class="material-icons component-icon">build</i>
+                        <div class="component-content">
+                            <div class="component-title">Construcción de alternativas</div>
+                            <div class="component-details">
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">inventory</i>
+                                        <span>Carteras existentes</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Soluciones que <span class="highlight">existen antes</span> del problema (expertos)
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">lightbulb</i>
+                                        <span>Soluciones emergentes</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Surgen cuando equipos <span class="highlight">exploran</span> instrumentos
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">psychology_alt</i>
+                                        <span>Herramientas cognitivas</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Opero con <span class="highlight">heurísticas</span> y <span class="highlight">evidencia</span> disponibles
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component-card">
+                        <i class="material-icons component-icon">door_front</i>
+                        <div class="component-content">
+                            <div class="component-title">Apertura de oportunidad</div>
+                            <div class="component-details">
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">crisis_alert</i>
+                                        <span>Disparadores</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Ventana se abre por <span class="highlight">crisis</span>, calendarios o cambios políticos
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">person</i>
+                                        <span>Emprendedor</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Conecta <span class="highlight">problema</span> y <span class="highlight">solución</span> en el momento oportuno
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">merge_type</i>
+                                        <span>Alineación</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Flujos de problemas, políticas e imperativos <span class="highlight">políticos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 15: Componentes del modelo (2) -->
+        <div class="slide" id="slide-15">
+            <div class="slide-header">
+                <h1 class="slide-title">2.4. Componentes del modelo (2)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="components-container">
+                    <div class="component-card">
+                        <i class="material-icons component-icon">handshake</i>
+                        <div class="component-content">
+                            <div class="component-title">Acuerdo y autorización</div>
+                            <div class="component-details">
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">hub</i>
+                                        <span>Redes de apoyo</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Búsqueda de apoyos en <span class="highlight">redes</span> y <span class="highlight">múltiples niveles</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">balance</i>
+                                        <span>Negociación</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Cuando los <span class="highlight">objetivos divergen</span>, activar negociación
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">science</i>
+                                        <span>Pilotos</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Cuando la solución se <span class="highlight">desconoce</span>, ensayar proyectos piloto
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component-card">
+                        <i class="material-icons component-icon">settings_suggest</i>
+                        <div class="component-content">
+                            <div class="component-title">Implementación adaptativa</div>
+                            <div class="component-details">
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">school</i>
+                                        <span>Enfoque de aprendizaje</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Ejecutar con <span class="highlight">capacidad de adaptación</span> y corrección
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">analytics</i>
+                                        <span>Medición</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        <span class="highlight">Monitoreo constante</span> de resultados e indicadores
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">tune</i>
+                                        <span>Ajustes</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        <span class="highlight">Reparaciones incrementales</span> ante efectos no anticipados
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component-card">
+                        <i class="material-icons component-icon">loop</i>
+                        <div class="component-content">
+                            <div class="component-title">Evaluación y retroalimentación</div>
+                            <div class="component-details">
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">fact_check</i>
+                                        <span>Revisión</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        ¿Se <span class="highlight">reduce</span> el problema original?
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">refresh</i>
+                                        <span>Reencuadre</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Si no, <span class="highlight">redefinir</span> y reiniciar el ciclo
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-title">
+                                        <i class="material-icons">foundation</i>
+                                        <span>Construcción institucional</span>
+                                    </div>
+                                    <div class="detail-text">
+                                        Generar <span class="highlight">capacidad estatal</span> y <span class="highlight">confianza</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 16: Reglas prácticas (guía para la acción) -->
+        <div class="slide" id="slide-16">
+            <div class="slide-header">
+                <h1 class="slide-title">2.4. Reglas prácticas (guía para la acción)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="rules-grid">
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <i class="material-icons rule-icon">label</i>
+                            <div class="rule-title">Nombrar bien el problema</div>
+                        </div>
+                        <div class="rule-content">
+                            Cambiar el <span class="highlight">encuadre</span> cambia la <span class="highlight">coalición</span> que apoya la decisión
+                            <div class="rule-example">
+                                "Cambio climático" vs. "Transición energética": diferentes actores, soluciones y apoyos
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <i class="material-icons rule-icon">grid_view</i>
+                            <div class="rule-title">Combinar estrategias de la matriz</div>
+                        </div>
+                        <div class="rule-content">
+                            <span class="highlight">Programar</span> cuando puedo, <span class="highlight">negociar</span> cuando debo, <span class="highlight">experimentar</span> cuando ignoro y <span class="highlight">movilizar símbolos</span> cuando todo es incierto
+                            <div class="rule-example">
+                                Adaptar la estrategia al nivel de conflicto e incertidumbre
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <i class="material-icons rule-icon">device_hub</i>
+                            <div class="rule-title">Manejar la interdependencia</div>
+                        </div>
+                        <div class="rule-content">
+                            Diagnosticar qué nivel <span class="highlight">(UE-Estado-región-municipio)</span> habilita o bloquea
+                            <div class="rule-example">
+                                Armar <span class="highlight">paquetes</span> que alineen incentivos entre actores y niveles de gobierno
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <i class="material-icons rule-icon">verified_user</i>
+                            <div class="rule-title">Cuidar la legitimidad</div>
+                        </div>
+                        <div class="rule-content">
+                            Legitimidad por <span class="highlight">eficacia</span> y por <span class="highlight">procedimiento</span>
+                            <div class="rule-example">
+                                Evaluar resultados y rendir cuentas para sostener apoyo ciudadano
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 17: Matriz A) Estados y herramientas (evolución estructural) -->
+        <div class="slide" id="slide-17">
+            <div class="slide-header">
+                <h1 class="slide-title">Matriz A) Estados y herramientas (evolución estructural)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="matrix-container">
+                    <div class="matrix-intro">
+                        <div class="matrix-title">
+                            <i class="material-icons">history</i>
+                            <span>Evolución de los arreglos institucionales e instrumentos de acción</span>
+                        </div>
+                        <div class="matrix-description">
+                            La transformación del Estado desde el modelo liberal hasta el contemporáneo refleja cambios en <span class="highlight">tareas, instrumentos y fuentes de legitimidad</span>
+                        </div>
+                    </div>
+                    
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Fase</th>
+                                <th>Tareas principales</th>
+                                <th>Instrumentos dominantes</th>
+                                <th>Legitimidad prioritaria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="feature-title">
+                                        <i class="material-icons">account_balance</i>
+                                        <span>Estado liberal</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">security</i>
+                                        <span>Orden interno</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">freedom</i>
+                                        <span>Libertades</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">gavel</i>
+                                        <span>Normas generales</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">verified</i>
+                                        <span>Permisos</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">block</i>
+                                        <span>Prohibiciones</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">balance</i>
+                                        <span>Legalidad</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="feature-title">
+                                        <i class="material-icons">health_and_safety</i>
+                                        <span>Welfare state</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">trending_up</i>
+                                        <span>Crecimiento</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">work</i>
+                                        <span>Empleo</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">shield</i>
+                                        <span>Protección social</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">track_changes</i>
+                                        <span>Programación por objetivos</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">swap_horiz</i>
+                                        <span>Transferencias</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">volunteer_activism</i>
+                                        <span>Incentivos</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">inventory</i>
+                                        <span>Provisión directa</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">speed</i>
+                                        <span>Eficacia de resultados</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="feature-title">
+                                        <i class="material-icons">hub</i>
+                                        <span>Contemporáneo</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">public</i>
+                                        <span>Problemas transnacionales</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">crisis_alert</i>
+                                        <span>Gestión del riesgo</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">device_hub</i>
+                                        <span>Interdependencia</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">settings</i>
+                                        <span>Mezcla de regulación</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">layers</i>
+                                        <span>Coordinación multinivel</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">fact_check</i>
+                                        <span>Evidencia</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">speed</i>
+                                        <span>Eficacia</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">assignment_turned_in</i>
+                                        <span>Rendición de cuentas</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="reference">
+                        Fuente: Dente (2004); Subirats (2007)
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 18: Matriz B) Complejidad–incertidumbre–conflicto: causas y efectos -->
+        <div class="slide" id="slide-18">
+            <div class="slide-header">
+                <h1 class="slide-title">Matriz B) Complejidad–incertidumbre–conflicto: causas y efectos</h1>
+            </div>
+            <div class="slide-content">
+                <div class="matrix-container">
+                    <div class="matrix-intro">
+                        <div class="matrix-title">
+                            <i class="material-icons">analytics</i>
+                            <span>Condiciones estructurales de las políticas públicas contemporáneas</span>
+                        </div>
+                        <div class="matrix-description">
+                            Análisis de las <span class="highlight">causas, efectos y respuestas</span> ante los tres rasgos dominantes en la toma de decisiones
+                        </div>
+                    </div>
+                    
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Rasgo</th>
+                                <th>Causas</th>
+                                <th>Efectos en la decisión</th>
+                                <th>Respuestas sugeridas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="feature-title">
+                                        <i class="material-icons">hub</i>
+                                        <span>Complejidad</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">groups</i>
+                                        <span>Multiplicación de actores</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">layers</i>
+                                        <span>Múltiples niveles</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">memory</i>
+                                        <span>Tecnología</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">blur_on</i>
+                                        <span>Responsabilidades difusas</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">sync_problem</i>
+                                        <span>Coordinación difícil</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">device_hub</i>
+                                        <span>Gobernanza en red</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">people_alt</i>
+                                        <span>Mapeo de actores</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">handshake</i>
+                                        <span>Acuerdos escalonados</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="feature-title">
+                                        <i class="material-icons">help_outline</i>
+                                        <span>Incertidumbre</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">crisis_alert</i>
+                                        <span>Shocks exógenos</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">compare_arrows</i>
+                                        <span>Diagnóstico ≫ terapia</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">warning</i>
+                                        <span>Riesgo de errores</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">share</i>
+                                        <span>Externalidades</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">science</i>
+                                        <span>Pilotos</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">assessment</i>
+                                        <span>Evaluación</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">auto_fix_high</i>
+                                        <span>Gestión adaptativa</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="feature-title">
+                                        <i class="material-icons">people_alt</i>
+                                        <span>Conflicto</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">psychology</i>
+                                        <span>Valores posmaterialistas</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">diversity_3</i>
+                                        <span>Nuevas identidades</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">not_interested</i>
+                                        <span>NIMBY</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">gavel</i>
+                                        <span>Judicialización</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">block</i>
+                                        <span>Veto social</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="feature-item">
+                                        <i class="material-icons">forum</i>
+                                        <span>Deliberación</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">paid</i>
+                                        <span>Compensaciones</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">visibility</i>
+                                        <span>Transparencia</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="material-icons">group_work</i>
+                                        <span>Co-diseño</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="reference">
+                        Fuente: Subirats (2007); Esteve (2009); Inglehart (1977)
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+
+        <!-- Diapositiva 19: Matriz C) Modelos decisionales (síntesis comparada) y Conclusiones -->
+        <div class="slide" id="slide-19">
+            <div class="slide-header">
+                <h1 class="slide-title">Matriz C) Modelos decisionales (síntesis comparada) y Conclusiones</h1>
+            </div>
+            <div class="slide-content">
+                <div class="matrix-container">
+                    <div class="matrix-title">
+                        <i class="material-icons">compare</i>
+                        <span>Comparación de modelos decisionales</span>
+                    </div>
+                    
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Supuestos</th>
+                                <th>Ventajas</th>
+                                <th>Riesgos</th>
+                                <th>Usos idóneos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Racional</b></td>
+                                <td>Objetivos claros<br>Info completa</td>
+                                <td>Claridad normativa<br>Criterio de óptimo</td>
+                                <td>Irrealista en contextos ambiguos</td>
+                                <td>Problemas técnicos con consenso</td>
+                            </tr>
+                            <tr>
+                                <td><b>Racionalidad limitada</b></td>
+                                <td>Capacidades y tiempo acotados</td>
+                                <td>Decisión viable a costos razonables</td>
+                                <td>Satisface y puede sesgar</td>
+                                <td>Entornos con presión temporal</td>
+                            </tr>
+                            <tr>
+                                <td><b>Incremental</b></td>
+                                <td>Continuidad<br>Comparación marginal</td>
+                                <td>Reduce conflicto y riesgo</td>
+                                <td>Encalla innovaciones</td>
+                                <td>Políticas estables y maduras</td>
+                            </tr>
+                            <tr>
+                                <td><b>Cubo de basura</b></td>
+                                <td>Flujos independientes<br>Ambigüedad</td>
+                                <td>Captura ventanas y acoplamientos</td>
+                                <td>Difícil de planificar</td>
+                                <td>Contextos políticos volátiles</td>
+                            </tr>
+                            <tr>
+                                <td><b>Integrador realista</b></td>
+                                <td>Combina los anteriores</td>
+                                <td>Flexible y adaptativo</td>
+                                <td>Exige coordinación</td>
+                                <td>Reformas complejas multinivel</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="conclusions-container">
+                        <div class="conclusions-title">
+                            <i class="material-icons">summarize</i>
+                            <span>Conclusiones del capítulo</span>
+                        </div>
+                        <div class="conclusions-grid">
+                            <div class="conclusion-item">
+                                <i class="material-icons">lightbulb</i>
+                                <div class="conclusion-text">
+                                    Decisión de policy: <span class="highlight">voluntad + alternativas + proceso</span> que busca transformar problemas colectivos
+                                </div>
+                            </div>
+                            <div class="conclusion-item">
+                                <i class="material-icons">history</i>
+                                <div class="conclusion-text">
+                                    Evolución: Estado <span class="highlight">liberal</span> (regulación) → <span class="highlight">welfare</span> (objetivos) → <span class="highlight">contemporáneo</span> (complejidad)
+                                </div>
+                            </div>
+                            <div class="conclusion-item">
+                                <i class="material-icons">visibility</i>
+                                <div class="conclusion-text">
+                                    Modelos como <span class="highlight">lentes conceptuales</span> para ordenar sin simplificar en exceso
+                                </div>
+                            </div>
+                            <div class="conclusion-item">
+                                <i class="material-icons">integration_instructions</i>
+                                <div class="conclusion-text">
+                                    Modelo <span class="highlight">integrador realista</span>: acopla flujos y aprende en la implementación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reference">
+                        Fuente: Dunn (1981); Dente (2004); Subirats (2007); Inglehart (1977); Kingdon (1995)
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                Capítulo 2: ¿Cómo entender una decisión de políticas públicas?
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+        <button class="nav-button" id="prev-btn" onclick="changeSlide(-1)">
+            <i class="material-icons">chevron_left</i>
+        </button>
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">19</span>
+        </div>
+        <div class="slide-indicator" id="slide-indicator"></div>
+        <button class="nav-button" id="next-btn" onclick="changeSlide(1)">
+            <i class="material-icons">chevron_right</i>
+        </button>
+    </div>
+
+    <script>
+        // Configuración inicial
+        let currentSlide = 1;
+        const totalSlides = 19;
+        
+        // Actualizar el contador total de diapositivas
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        // Crear indicadores de diapositiva
+        const indicatorContainer = document.getElementById('slide-indicator');
+        for (let i = 1; i <= totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'indicator-dot';
+            if (i === 1) dot.classList.add('active');
+            dot.onclick = () => goToSlide(i);
+            indicatorContainer.appendChild(dot);
+        }
+        
+        // Función para cambiar de diapositiva
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 1 && newSlide <= totalSlides) {
+                goToSlide(newSlide);
+            }
+        }
+        
+        // Función para ir a una diapositiva específica
+        function goToSlide(slideNumber) {
+            // Ocultar la diapositiva actual
+            document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+            
+            // Actualizar el número de diapositiva actual
+            currentSlide = slideNumber;
+            
+            // Mostrar la nueva diapositiva
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            
+            // Actualizar el contador
+            document.getElementById('current-slide').textContent = currentSlide;
+            
+            // Actualizar los indicadores
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                if (index + 1 === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            
+            // Actualizar el estado de los botones de navegación
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        // Manejar eventos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+        
+        // Inicializar el estado de los botones
+        document.getElementById('prev-btn').disabled = true;
+    </script>
+</body>
+</html>
