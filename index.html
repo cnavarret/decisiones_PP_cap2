@@ -58,7 +58,7 @@
         .slide-footer {
             padding: 20px 70px;
             font-size: 16px;
-            color: #78909c;
+            color: #bbc8cf;
             text-align: center;
             border-top: 1px solid #e0e0e0;
         }
@@ -321,7 +321,14 @@
         .matrix-table tr:nth-child(even) {
             background-color: rgba(255, 255, 255, 0.07);
         }
+        .matrix-container .feature-title,
+        .matrix-container .feature-item {
+            color: #eceff1;
+        }
         .strategy-highlight {
+        .matrix-container .highlight {
+            color: #90caf9;
+        }
             color: #90caf9;
             font-weight: 600;
         }
@@ -343,12 +350,13 @@
             font-size: 24px;
         }
         .bento-text {
-            color: #ffffff;
+            color: #455a64;
             font-size: 18px;
             font-weight: 600;
         }
         .index-container {
             flex: 1;
+            flex-basis: 33.33%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -371,6 +379,8 @@
             color: #455a64;
         }
         .visual-content {
+            flex: 2;
+            flex-basis: 66.67%;
             background-color: rgba(144, 202, 249, 0.1);
             border-radius: 12px;
             padding: 30px;
@@ -722,6 +732,115 @@
             color: #455a64;
             line-height: 1.4;
         }
+
+        /* Estilos para la ventana modal de notas */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: #333;
+        }
+        #note-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #263238;
+            margin-bottom: 15px;
+        }
+        /* Estilo para los textos que activan la nota */
+        .note-trigger {
+            color: #5693c5 !important; /* Asegurar que el color se aplique */
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 2px solid #5693c5; /* Cambiado a línea continua */
+            transition: background-color 0.2s;
+            display: inline; /* Asegurar que el borde solo subraye el texto */
+        }
+        /* Popover de notas */
+        .note-popover {
+            position: fixed;
+            z-index: 2100;
+            background: #ffffff;
+            color: #263238;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            max-width: 380px;
+            width: max-content;
+            min-width: 280px;
+            padding: 16px 20px 18px;
+            border: 1px solid #e6ecf0;
+            display: none;
+        }
+        .note-trigger:hover { background-color: rgba(86,147,197,0.12); }
+        .note-popover.visible { display: block; }
+        .note-popover .note-popover-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 28px 8px 0;
+            color: #263238;
+        }
+        .note-popover .note-popover-text { font-size: 16px; line-height: 1.5; color: #455a64; }
+        .note-popover .note-popover-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+        .note-btn { background: #edf6ff; color: #1976d2; border: 1px solid #cfe8ff; border-radius: 8px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
+        .note-btn:hover { background: #e3f2fd; }
+        .note-popover .note-close { position: absolute; top: 10px; right: 12px; cursor: pointer; color: #90a4ae; font-size: 20px; }
+        /* Sidebar anclado al margen de la diapositiva */
+        .note-sidebar {
+            position: fixed; /* se alinea respecto al viewport y se coloca al borde de la diapositiva con JS */
+            z-index: 2100;
+            width: 340px;
+            max-height: 80vh;
+            background: #ffffff;
+            border: 1px solid #e6ecf0;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 16px 18px;
+            overflow: auto;
+            display: none;
+        }
+        .note-sidebar.visible { display: block; }
+        .note-sidebar .note-sidebar-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #263238; }
+        .note-sidebar .note-sidebar-text { font-size: 16px; line-height: 1.5; color: #455a64; }
+        .note-sidebar .note-close { position: absolute; top: 10px; right: 12px; cursor: pointer; color: #90a4ae; font-size: 20px; }
     </style>
 </head>
 <body>
@@ -736,10 +855,10 @@
                     <div style="font-size: 60px; font-weight: 700; color: #263238; margin-bottom: 40px;">
                         ¿Cómo entender una decisión de políticas públicas?
                     </div>
-                    <div style="font-size: 20px; color: #e0e0e0; margin-bottom: 40px;">
+                    <div style="font-size: 20px; color: #868585; margin-bottom: 40px;">
                         Un análisis sobre la naturaleza, características y modelos de decisión en el ámbito de las políticas públicas contemporáneas
                     </div>
-                    <div style="font-size: 20px; color: #90caf9; margin-top: 40px;">
+                    <div style="font-size: 20px; color: #5693c5; margin-top: 40px;">
                         Presentado por: Dr. CNU
                     </div>
                 </div>
@@ -860,6 +979,7 @@
                         <div class="concept-item">
                             <i class="material-icons">check_circle</i>
                             <div class="concept-text">Puede consistir en <span class="quote">"decidir no decidir"</span> para mantener el statu quo</div>
+                           
                         </div>
                     </div>
                     <div class="concept-container">
@@ -883,7 +1003,7 @@
                 </div>
                 <div class="right-content">
                     <div class="visual-box">
-                        <div class="visual-title">Elementos Esenciales</div>
+                        <div class="visual-title"><span class="note-trigger" data-note-title="Elementos Esenciales" data-note-text="Una elección que requiere <strong>acto de voluntad</strong> entre <strong>alternativas</strong> y que pretende <strong>transformar la realidad</strong> (Bobbio, 1996). En política pública, además de voluntad y alternativas, existe un <strong>proceso</strong> que conecta <strong>elecciones parciales</strong>, <strong>descartes</strong> y <strong>ajustes sucesivos</strong>, hasta llegar a un resultado que, a veces, también consiste en <strong>“decidir no decidir”</strong> para mantener el <strong>statu quo</strong>.<br><br>Se distingue la decisión sobre <strong>medios</strong> (cómo alcanzar un fin) o sobre <strong>fines</strong> (qué objetivos se persiguen). De ahí que la <strong>decisión sustantiva</strong> consiste en <strong>priorizar valores y fines</strong>, y no sólo en <strong>escoger instrumentos</strong> (MacKenzie, 1982).">Elementos Esenciales</span></div>
                         <div class="visual-item">
                             <i class="material-icons">psychology</i>
                             <div class="visual-text"><span class="visual-highlight">Voluntad</span> + <span class="visual-highlight">Alternativas</span></div>
@@ -2386,6 +2506,15 @@
         </div>
     </div>
 
+    <!-- Ventana Modal para Notas -->
+    <div id="note-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 id="note-title"></h3>
+            <p id="note-text"></p>
+        </div>
+    </div>
+
     <!-- Navegación -->
     <div class="navigation">
         <button class="nav-button" id="prev-btn" onclick="changeSlide(-1)">
@@ -2398,6 +2527,21 @@
         <button class="nav-button" id="next-btn" onclick="changeSlide(1)">
             <i class="material-icons">chevron_right</i>
         </button>
+    </div>
+
+    <!-- Popover y Sidebar para notas -->
+    <div id="note-popover" class="note-popover" role="dialog" aria-modal="false">
+        <span class="note-close" data-action="close">&times;</span>
+        <div class="note-popover-title" id="note-popover-title"></div>
+        <div class="note-popover-text" id="note-popover-text"></div>
+        <div class="note-popover-actions">
+            <button class="note-btn" data-action="dock">Anclar al margen</button>
+        </div>
+    </div>
+    <div id="note-sidebar" class="note-sidebar" role="complementary">
+        <span class="note-close" data-action="close">&times;</span>
+        <div class="note-sidebar-title" id="note-sidebar-title"></div>
+        <div class="note-sidebar-text" id="note-sidebar-text"></div>
     </div>
 
     <script>
@@ -2466,6 +2610,173 @@
         
         // Inicializar el estado de los botones
         document.getElementById('prev-btn').disabled = true;
+
+        // (Se unifica la lógica de notas dentro del bloque avanzado más abajo)
+        // --- Notas avanzadas: Popover y Sidebar ---
+        (function(){
+            const modal = document.getElementById('note-modal');
+            const modalTitle = document.getElementById('note-title');
+            const modalText = document.getElementById('note-text');
+            const closeModalBtn = document.querySelector('#note-modal .modal-close');
+
+            const popover = document.getElementById('note-popover');
+            const popTitle = document.getElementById('note-popover-title');
+            const popText = document.getElementById('note-popover-text');
+
+            const sidebar = document.getElementById('note-sidebar');
+            const sideTitle = document.getElementById('note-sidebar-title');
+            const sideText = document.getElementById('note-sidebar-text');
+
+            // Estado para gestión por clic
+            let currentTrigger = null;
+            const enableHover = true; // Activar hover además de clic
+
+            function openNoteModal(title, html) {
+                modalTitle.textContent = title || '';
+                modalText.innerHTML = html || '';
+                modal.classList.add('visible');
+            }
+            function closeNoteModal() { modal.classList.remove('visible'); }
+
+            function openNotePopover(title, html, anchorEl) {
+                popTitle.textContent = title || '';
+                popText.innerHTML = html || '';
+                popover.classList.add('visible');
+                currentTrigger = anchorEl || null;
+                const rect = anchorEl.getBoundingClientRect();
+                const margin = 8;
+                const maxWidth = Math.min(380, window.innerWidth - 24);
+                popover.style.maxWidth = maxWidth + 'px';
+                let top = rect.bottom + margin;
+                let left = Math.min(rect.left, window.innerWidth - maxWidth - 12);
+                const popHeight = popover.offsetHeight || 180;
+                if (top + popHeight > window.innerHeight) {
+                    top = Math.max(12, rect.top - popHeight - margin);
+                }
+                popover.style.top = `${top}px`;
+                popover.style.left = `${left}px`;
+            }
+            function closeNotePopover() { popover.classList.remove('visible'); currentTrigger = null; }
+
+            function positionSidebarToSlide() {
+                const slide = document.querySelector('.slide.active');
+                if (!slide) return;
+                const r = slide.getBoundingClientRect();
+                const gap = 12;
+                sidebar.style.top = `${Math.max(12, r.top)}px`;
+                sidebar.style.left = `${Math.min(window.innerWidth - sidebar.offsetWidth - 12, r.right + gap)}px`;
+                sidebar.style.maxHeight = `${Math.max(180, Math.min(window.innerHeight - Math.max(12, r.top) - 16, r.height - 24))}px`;
+            }
+            function openNoteSidebar(title, html) {
+                sideTitle.textContent = title || '';
+                sideText.innerHTML = html || '';
+                sidebar.classList.add('visible');
+                positionSidebarToSlide();
+            }
+            function closeNoteSidebar() { sidebar.classList.remove('visible'); }
+
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeNoteModal);
+            if (popover) popover.addEventListener('click', (e) => {
+                const action = e.target.getAttribute('data-action');
+                if (action === 'close') closeNotePopover();
+                if (action === 'dock') { openNoteSidebar(popTitle.textContent, popText.innerHTML); closeNotePopover(); }
+            });
+            if (sidebar) sidebar.addEventListener('click', (e) => {
+                const action = e.target.getAttribute('data-action');
+                if (action === 'close') closeNoteSidebar();
+            });
+            if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) closeNoteModal(); });
+
+            // Hover opcional (desactivado por defecto)
+            if (enableHover) {
+                let hoverTimer = null;
+                let closeTimer = null;
+                function scheduleOpen(trigger) {
+                    clearTimeout(hoverTimer);
+                    hoverTimer = setTimeout(() => {
+                        const title = trigger.getAttribute('data-note-title') || '';
+                        const text = trigger.getAttribute('data-note-text') || '';
+                        openNotePopover(title, text, trigger);
+                    }, 250);
+                }
+                function scheduleClose() {
+                    clearTimeout(closeTimer);
+                    closeTimer = setTimeout(() => { closeNotePopover(); }, 150);
+                }
+                document.addEventListener('mouseover', (e) => {
+                    const trg = e.target.closest && e.target.closest('.note-trigger');
+                    if (!trg) return;
+                    scheduleOpen(trg);
+                });
+                document.addEventListener('mouseout', (e) => {
+                    const trg = e.target.closest && e.target.closest('.note-trigger');
+                    if (!trg) return;
+                    if (e.relatedTarget && (e.relatedTarget.closest && (e.relatedTarget.closest('#note-popover') || e.relatedTarget.closest('.note-trigger')))) return;
+                    clearTimeout(hoverTimer);
+                    scheduleClose();
+                });
+                if (popover) {
+                    popover.addEventListener('mouseenter', () => { clearTimeout(closeTimer); });
+                    popover.addEventListener('mouseleave', () => { scheduleClose(); });
+                }
+            }
+
+            // Apertura/cierre por clic en el texto destacado
+            document.addEventListener('click', function(e) {
+                const trigger = e.target.closest && e.target.closest('.note-trigger');
+                if (!trigger) return;
+                const title = trigger.getAttribute('data-note-title') || '';
+                const text = trigger.getAttribute('data-note-text') || '';
+                const modeAttr = (trigger.getAttribute('data-note-mode') || '').toLowerCase();
+                const forcedSidebar = e.shiftKey;
+                const mode = forcedSidebar ? 'sidebar' : (modeAttr || 'popover');
+                // Toggle si ya está abierto para este trigger
+                if (popover.classList.contains('visible') && currentTrigger === trigger && mode !== 'modal' && mode !== 'sidebar') {
+                    return closeNotePopover();
+                }
+                closeNoteModal(); closeNotePopover(); closeNoteSidebar();
+                if (mode === 'modal') return openNoteModal(title, text);
+                if (mode === 'sidebar') return openNoteSidebar(title, text);
+                return openNotePopover(title, text, trigger);
+            });
+
+            // Cerrar al hacer clic fuera del popover/trigger
+            document.addEventListener('click', function(e) {
+                if (e.target.closest && (e.target.closest('.note-trigger') || e.target.closest('#note-popover'))) return;
+                closeNotePopover();
+            });
+
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeNoteModal(); closeNotePopover(); closeNoteSidebar(); } });
+            window.addEventListener('resize', positionSidebarToSlide);
+            // Reposicionar popover al redimensionar o hacer scroll
+            function repositionPopoverIfOpen() {
+                if (!popover.classList.contains('visible') || !currentTrigger) return;
+                openNotePopover(popTitle.textContent, popText.innerHTML, currentTrigger);
+            }
+            window.addEventListener('resize', repositionPopoverIfOpen);
+            window.addEventListener('scroll', repositionPopoverIfOpen, true);
+            const _goToSlide = goToSlide;
+            goToSlide = function(n) { _goToSlide(n); positionSidebarToSlide(); };
+
+            // Accesibilidad y focus: hacer focuseables los triggers
+            function prepareNoteTriggers(root=document) {
+                root.querySelectorAll && root.querySelectorAll('.note-trigger').forEach(el => {
+                    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex','0');
+                    el.setAttribute('role','button');
+                    el.setAttribute('aria-haspopup','dialog');
+                });
+            }
+            prepareNoteTriggers();
+            // Por si se agregan dinámicamente
+            const mo = new MutationObserver((muts) => {
+                for (const m of muts) {
+                    if (m.addedNodes && m.addedNodes.length) {
+                        m.addedNodes.forEach(node => { if (node.nodeType===1) prepareNoteTriggers(node); });
+                    }
+                }
+            });
+            mo.observe(document.body, { childList: true, subtree: true });
+        })();
     </script>
 </body>
 </html>
