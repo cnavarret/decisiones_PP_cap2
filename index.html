@@ -37,9 +37,13 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 0; /* por debajo de la activa */
+            pointer-events: none; /* no interceptar eventos cuando no está activa */
         }
         .slide.active {
             opacity: 1;
+            z-index: 1; /* por encima del resto */
+            pointer-events: auto; /* recibir clics/hover cuando activa */
         }
         .slide-header {
             padding: 40px 70px 20px;
@@ -2682,6 +2686,14 @@
             }
             function closeNoteSidebar() { sidebar.classList.remove('visible'); }
 
+            // Exponer funciones clave globalmente por compatibilidad
+            window.openNoteModal = openNoteModal;
+            window.closeNoteModal = closeNoteModal;
+            window.openNotePopover = openNotePopover;
+            window.closeNotePopover = closeNotePopover;
+            window.openNoteSidebar = openNoteSidebar;
+            window.closeNoteSidebar = closeNoteSidebar;
+
             if (closeModalBtn) closeModalBtn.addEventListener('click', closeNoteModal);
             if (popover) popover.addEventListener('click', (e) => {
                 const action = e.target.getAttribute('data-action');
@@ -2784,6 +2796,9 @@
             });
             mo.observe(document.body, { childList: true, subtree: true });
         })();
+        // Asegurar disponibilidad global para handlers inline/externos
+        window.changeSlide = changeSlide;
+        window.goToSlide = goToSlide;
     </script>
 </body>
 </html>
