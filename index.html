@@ -37,15 +37,13 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            /* Evitar que diapositivas ocultas intercepten eventos */
-            pointer-events: none;
-            z-index: 0;
+            z-index: 0; /* por debajo de la activa */
+            pointer-events: none; /* no interceptar eventos cuando no está activa */
         }
         .slide.active {
             opacity: 1;
-            /* Solo la diapositiva activa recibe interacción */
-            pointer-events: auto;
-            z-index: 1;
+            z-index: 1; /* por encima del resto */
+            pointer-events: auto; /* recibir clics/hover cuando activa */
         }
         .slide-header {
             padding: 40px 70px 20px;
@@ -1391,7 +1389,7 @@
                             <span>La metáfora del "croquet"</span>
                         </div>
                         <div class="metaphor-text">
-                            <span class="quote">"Aplicada al 'croquet' a las políticas: las bolas son <span class="highlight">puercoespines</span>, los palos <span class="highlight">flamencos</span> y las puertas <span class="highlight">soldados</span> que se mueven"</span>
+                            <span class="quote">"Cuando juego al 'croquet' de las políticas, las bolas son <span class="highlight">puercoespines</span>, los palos <span class="highlight">flamencos</span> y las puertas <span class="highlight">soldados</span> que se mueven"</span>
                         </div>
                         <div class="metaphor-text" style="margin-top: 10px; font-style: italic; text-align: right; color: #78909c;">
                             — Deutsch (1963)
@@ -1831,7 +1829,7 @@
                                         <span>Herramientas cognitivas</span>
                                     </div>
                                     <div class="detail-text">
-                                        Opera con <span class="highlight">heurísticas</span> y <span class="highlight">evidencia</span> disponibles
+                                        Opero con <span class="highlight">heurísticas</span> y <span class="highlight">evidencia</span> disponibles
                                     </div>
                                 </div>
                             </div>
@@ -2688,6 +2686,14 @@
             }
             function closeNoteSidebar() { sidebar.classList.remove('visible'); }
 
+            // Exponer funciones clave globalmente por compatibilidad
+            window.openNoteModal = openNoteModal;
+            window.closeNoteModal = closeNoteModal;
+            window.openNotePopover = openNotePopover;
+            window.closeNotePopover = closeNotePopover;
+            window.openNoteSidebar = openNoteSidebar;
+            window.closeNoteSidebar = closeNoteSidebar;
+
             if (closeModalBtn) closeModalBtn.addEventListener('click', closeNoteModal);
             if (popover) popover.addEventListener('click', (e) => {
                 const action = e.target.getAttribute('data-action');
@@ -2790,6 +2796,9 @@
             });
             mo.observe(document.body, { childList: true, subtree: true });
         })();
+        // Asegurar disponibilidad global para handlers inline/externos
+        window.changeSlide = changeSlide;
+        window.goToSlide = goToSlide;
     </script>
 </body>
 </html>
