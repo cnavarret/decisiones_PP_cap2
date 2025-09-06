@@ -1,0 +1,5 @@
+_fetched_index.html
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
