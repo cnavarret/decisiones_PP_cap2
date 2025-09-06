@@ -37,9 +37,15 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            /* Evitar que diapositivas ocultas intercepten eventos */
+            pointer-events: none;
+            z-index: 0;
         }
         .slide.active {
             opacity: 1;
+            /* Solo la diapositiva activa recibe interacción */
+            pointer-events: auto;
+            z-index: 1;
         }
         .slide-header {
             padding: 40px 70px 20px;
